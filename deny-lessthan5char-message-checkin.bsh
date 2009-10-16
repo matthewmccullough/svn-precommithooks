@@ -1,0 +1,16 @@
+#!/bin/bash
+#Derived from: http://grimsy.net/?p=22
+#Official Reference: http://svnbook.red-bean.com/en/1.5/svn.reposadmin.create.html
+#http://svnbook.red-bean.com/en/1.5/svn.ref.reposhooks.pre-commit.html
+
+REPOS="$1"
+TXN="$2"
+
+SVNLOOK=/usr/bin/svnlook
+LOGMSG=$($SVNLOOK log -t "$TXN" "$REPOS" | grep [a-zA-Z0-9] | wc -c)
+
+if [ "$LOGMSG" -lt 5 ]; then
+echo -e "Please provide a meaningful comment when committing changes." 1&gt;&amp;2
+exit 1
+fi
+exit 0

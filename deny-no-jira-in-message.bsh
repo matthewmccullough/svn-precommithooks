@@ -1,0 +1,13 @@
+#!/bin/bash
+#Derived from: http://grimsy.net/?p=22
+#Official Reference: http://svnbook.red-bean.com/en/1.5/svn.reposadmin.create.html
+#http://svnbook.red-bean.com/en/1.5/svn.ref.reposhooks.pre-commit.html
+
+REPOS="$1"
+TXN="$2"
+
+# Check log message for proper task/bug identification
+if [ -x ${REPOS}/hooks/check_log_message.sh ]; then
+${REPOS}/hooks/check_log_message.sh "${REPOS}" "${TXN}" 1&gt;&amp;2 || exit 1
+fi
+exit 0

@@ -1,0 +1,18 @@
+#!/bin/bash
+#Derived from: http://grimsy.net/?p=22
+#Official Reference: http://svnbook.red-bean.com/en/1.5/svn.reposadmin.create.html
+#http://svnbook.red-bean.com/en/1.5/svn.ref.reposhooks.pre-commit.html
+
+REPOS="$1"
+TXN="$2"
+
+# Make sure that the log message contains some text.
+SVNLOOK=/usr/bin/svnlook
+SVNLOOKOK=1
+$SVNLOOK log -t "$TXN" "$REPOS" | \
+grep "[a-zA-Z0-9]" &gt; /dev/null || SVNLOOKOK=0
+if [ $SVNLOOKOK = 0 ]; then
+echo Empty log messages are not allowed. Please provide a proper log message. 1&gt;&amp;2
+exit 1
+fi
+exit 0
