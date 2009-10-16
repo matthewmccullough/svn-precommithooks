@@ -1,0 +1,29 @@
+#!/bin/bash
+#Derived from: http://grimsy.net/?p=22 
+#Official Reference: http://svnbook.red-bean.com/en/1.5/svn.reposadmin.create.html
+#http://svnbook.red-bean.com/en/1.5/svn.ref.reposhooks.pre-commit.html
+# Sample text to try this match against:
+# PR# CBS00012345 PR# DENqa12345 PR# KBSqa12345 This is a test for ddd99() for a scoped:something with no line breaks.
+
+REPOS="${1}"
+TXN="${2}"
+
+SVNLOOK=/usr/bin/svnlook
+
+LOG_MSG_LINE1=`${SVNLOOK} log -t "${TXN}" "${REPOS}" | head -n1`
+
+if (echo "${LOG_MSG_LINE1}" | egrep '^(PR# (CBS|DENqa|KBSqa)[0-9]{5,8}\ )+[ \w\d\(\)\:]{10,}$' &gt; /dev/null;) \
+|| (echo "${LOG_MSG_LINE1}" | egrep '^\[maven-release-plugin\][\s]*.*$' &gt; /dev/null;)
+then
+exit 0
+else
+echo ""
+echo "Your log message does not contain a ClearQuest Issue identifier (or bad format used)"
+echo "The ClearQuest Issue identifier must be the first item on the first line of the log message."
+echo ""
+echo "Proper ClearQuest format:  'PR# 00012345 Your message.'"
+echo "or:  'PR# 00012345 PR# 00012345 PR# 00012345 Your message.'"
+echo "Only parens, colons and periods may be used as punctuation. Newlines are not allowed."
+echo "CQ regex: '^(PR# (CBS|DENqa|KBSqa)[0-9]{5,8}\ )+[ \w\d\(\)\:]{10,}$'"
+exit 1
+fi
