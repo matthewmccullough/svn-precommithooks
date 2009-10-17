@@ -12,18 +12,18 @@ SVNLOOK=/usr/bin/svnlook
 
 LOG_MSG_LINE1=`${SVNLOOK} log -t "${TXN}" "${REPOS}" | head -n1`
 
-if (echo "${LOG_MSG_LINE1}" | egrep '^(PR# (CBS|DENqa|KBSqa)[0-9]{5,8}\ )+[ \w\d\(\)\:]{10,}$' &gt; /dev/null;) \
-|| (echo "${LOG_MSG_LINE1}" | egrep '^\[maven-release-plugin\][\s]*.*$' &gt; /dev/null;)
+if (echo "${LOG_MSG_LINE1}" | egrep '^(PR# (CBS|DENqa|KBSqa)[0-9]{5,8}\ )+[ \w\d\(\)\:]{10,}$' > /dev/null;) \
+|| (echo "${LOG_MSG_LINE1}" | egrep '^\[maven-release-plugin\][\s]*.*$' > /dev/null;)
 then
 exit 0
 else
-echo ""
-echo "Your log message does not contain a ClearQuest Issue identifier (or bad format used)"
-echo "The ClearQuest Issue identifier must be the first item on the first line of the log message."
-echo ""
-echo "Proper ClearQuest format:  'PR# 00012345 Your message.'"
-echo "or:  'PR# 00012345 PR# 00012345 PR# 00012345 Your message.'"
-echo "Only parens, colons and periods may be used as punctuation. Newlines are not allowed."
-echo "CQ regex: '^(PR# (CBS|DENqa|KBSqa)[0-9]{5,8}\ )+[ \w\d\(\)\:]{10,}$'"
+echo "" >> /dev/stderr
+echo "Your log message does not contain a ClearQuest Issue identifier (or bad format used)" >> /dev/stderr
+echo "The ClearQuest Issue identifier must be the first item on the first line of the log message." >> /dev/stderr
+echo "" >> /dev/stderr
+echo "Proper ClearQuest format:  'PR# 00012345 Your message.'" >> /dev/stderr
+echo "or:  'PR# 00012345 PR# 00012345 PR# 00012345 Your message.'" >> /dev/stderr
+echo "Only parens, colons and periods may be used as punctuation. Newlines are not allowed." >> /dev/stderr
+echo "CQ regex: '^(PR# (CBS|DENqa|KBSqa)[0-9]{5,8}\ )+[ \w\d\(\)\:]{10,}$'" >> /dev/stderr
 exit 1
 fi
